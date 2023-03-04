@@ -2,10 +2,29 @@
 //include "../../includes/functions.inc.php";
 
 //isLogged('../login/login.html.php');
-if(!$_SESSION['loggedin']) {
+
+if(!isset($_SESSION)) session_start();
+if(!$_SESSION['loggedin']){
     header('Location: ../login/login.html.php');
-exit;
+    exit;
+} else if($_SESSION['loggedin']){
+    // Duration de la session en secondes
+    $duration = 30000; // = 5mn
+
+    // Lire la dernière requête de l'utilisateur
+    $time = $_SERVER['REQUEST_TIME'];
+
+    if(isset($_SESSION['LAST_ACTIVITY']) && ($time - $_SESSION['LAST_ACTIVITY']) > $duration){
+        // vider la session
+        $_SESSION = array();
+        // déstruction
+        session_destroy();
+    }
+
+    $_SESSION['LAST_ACTIVITY'] = $time;
+
 }
+
 ?>
 <table class="table table-bordered">
     <thead class="thead-dark">
@@ -46,7 +65,7 @@ exit;
             </td>
 
             <td>
-                <a href="<?= lien("msg", "supprimer", $$r['id']) ?>">
+                <a href="<?= lien("msg", "supprimer", $r['id']) ?>">
                     <i class="fa fa-trash"></i>
                 </a>
             </td>
@@ -58,21 +77,21 @@ exit;
 </table>
 <section>
 
-    <nav>
+    <nav aria-label="Menu secondaire" role="navigation">
 
-        <ul class="pagination">
+        <ul class="pagination" role="menu">
             <!-- Lien vers la page précédente (désactivé si on se trouve sur la 1ère page) -->
-            <li class="page-item <?= ($pagination->getCurrentPage() == 1) ? "disabled" : "" ?>">
-                <a href="<?=$_SERVER['REQUEST_URI']?>&page=<?= $pagination->getCurrentPage() - 1 ?>" class="page-link">Précédente</a>
+            <li role="menuitem" class="page-item <?= ($pagination->getCurrentPage() == 1) ? "disabled" : "" ?>">
+                <a title="Aller à la page précédente" href="<?=$_SERVER['REQUEST_URI']?>&page=<?= $pagination->getCurrentPage() - 1 ?>" class="page-link">Précédente</a>
             </li>
             <?php for($page = 1; $page <= $pagination->getPages(); $page++ ): ?>
                 <!-- Lien vers chacune des pages (activé si on se trouve sur la page correspondante) -->
-            <li class="page-item <?= ($pagination->getCurrentPage() == $page) ? "active" : "" ?>">
-                <a href="<?=$_SERVER['REQUEST_URI']?>&page=<?= $page ?>" class="page-link"><?= $page ?></a>
+            <li role="menuitem" class="page-item <?= ($pagination->getCurrentPage() == $page) ? "active" : "" ?>">
+                <a title="Aller à la page suivante" href="<?=$_SERVER['REQUEST_URI']?>&page=<?= $page ?>" class="page-link"><?= $page ?></a>
             </li>
             <?php endfor ?>
             <!-- Lien vers la page suivante (désactivé si on se trouve sur la dernière page) -->
-            <li class="page-item <?= ($pagination->getCurrentPage() == $pagination->getPages()) ? "disabled" : "" ?>">
+            <li role="menuitem" class="page-item <?= ($pagination->getCurrentPage() == $pagination->getPages()) ? "disabled" : "" ?>">
                 <a href="<?=$_SERVER['REQUEST_URI']?>&page=<?= $pagination->getCurrentPage() + 1 ?>" class="page-link">Suivante</a>
             </li>
         </ul>

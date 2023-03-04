@@ -35,7 +35,6 @@ class PaginationControleur{
             }
         }
         //var_dump($dateOption);
-        $msg = Bdd::select("contact", "msg", $dateOption, $traitementOption);
         //var_dump($msg);
         $pagination = new Pagination;
 
@@ -45,7 +44,7 @@ class PaginationControleur{
             $pagination->setCurrentPage(1);
         }
 
-        $result = Bdd::calcTotalPages('nb_items', 'contact', 'pagination', $dateOption, $traitementOption);
+        $result = Bdd::calcTotalPages('nb_items', 'contact', $traitementOption);
         //var_dump($result);
         //var_dump($pagination->getNbItems());
         $pagination->setNbItems($result['nb_items']);
@@ -59,7 +58,7 @@ class PaginationControleur{
         // Calcul du 1er article de la page
         $pagination->setPremier(($pagination->getCurrentPage() * $pagination->getParPage()) - $pagination->getParPage());
 
-        $result2 = Bdd::itemsPerPage('contact', $pagination, 'pagination', $dateOption, $traitementOption);
+        $result2 = Bdd::itemsPerPage('contact', $pagination, $dateOption, $traitementOption);
         //var_dump($result2);
 
         include "vues/header.html.php";

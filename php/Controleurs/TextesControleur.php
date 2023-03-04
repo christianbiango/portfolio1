@@ -24,7 +24,9 @@ class TextesControleur{
             
             //var_dump($f->getImg());
             $t->setText($_POST['txt']);
-            $resultat = Bdd::insertTexte($t);
+
+            // L'objet, la table, la colonne et la valeur que l'on souhaite insérer en base de données
+            $resultat = Bdd::insertProjet($t, "textes", "text", ":text");
             var_dump($resultat);
         
             if($resultat){
@@ -53,7 +55,7 @@ class TextesControleur{
 
                 if($t) {
                     if($_SERVER["REQUEST_METHOD"] == "POST"){
-                        if( Bdd::deleteLivre($t, 'textes') == 1) {
+                        if( Bdd::deleteItem($t, 'textes') == 1) {
                             redirection("index_back.php");
                         }
                     }
@@ -91,7 +93,8 @@ class TextesControleur{
                 $t->setDate(date('d-m-Y H:i:s'));
                 //var_dump($p->getDate());
                 //var_dump($p->getOldFile());
-                if( Bdd::updateText($t) ){
+                // Le texte que l'on souhaite modifier en base de données
+                if( Bdd::updateProjet($t, 'textes', 'text = :text') ){
                     redirection("vues/textes/textes.interface.html.php");
                 } else {
                     $erreurs["generale"] = "Erreur lors de la modification en bdd";

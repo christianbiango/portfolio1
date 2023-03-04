@@ -37,7 +37,7 @@ exit;
                 <?= date("d/m/Y à H:i:s", strtotime($p->getDate())); ?>
             </td>
             <td>
-                <?= date("d/m/Y à H:i:s", strtotime($p->getDateModification())); ?>
+                <?= ($p->getDateModification() == null ? 'Jamais modifié' : date("d/m/Y à H:i:s", strtotime($p->getDateModification()))); ?>
             </td>
 
             <td>

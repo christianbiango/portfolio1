@@ -24,7 +24,9 @@ class ImagesControleur{
             
             $i->setImg($_FILES['img']);
             //var_dump($f->getImg());
-            $resultat = Bdd::insertImage($i);
+
+            // Le projet, la table, les colonnes et leurs valeurs qu'on souhaite ajouter en base de données
+            $resultat = Bdd::insertProjet($i, "images", "img, name", ":img, :name");
             var_dump($resultat);
         
             if($resultat){
@@ -53,7 +55,7 @@ class ImagesControleur{
 
                 if($i) {
                     if($_SERVER["REQUEST_METHOD"] == "POST"){
-                        if( Bdd::deleteLivre($i, 'images') == 1) {
+                        if( Bdd::deleteItem($i, 'images') == 1) {
                             redirection("index_back.php");
                         }
                     }
@@ -85,7 +87,8 @@ class ImagesControleur{
                 //var_dump($p->getDate());
                 $i->setOldFile($image->getName());
                 //var_dump($p->getOldFile());
-                if( Bdd::updateImage($i) ){
+                // L'image, la table et les colonnes et ses valeurs que l'on souhaite modifier en base de données
+                if( Bdd::updateProjet($i, 'images', 'name = :name, img = :img') ){
                     if(!$i->getName() != $i->getOldFile()){
                         redirection("vues/img/img.interface.html.php");
                     } else if(unlink('./uploads/' . $i->getOldFile())){

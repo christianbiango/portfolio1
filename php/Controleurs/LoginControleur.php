@@ -4,6 +4,7 @@ namespace Controleurs;
 
 use Modeles\Bdd;
 use Modeles\Entites\Login;
+//use const Config\IS_TRUE;
 
 if(!isset($_GET['methode'])){
     require_once '../../Modeles/Entites/Login.php';
@@ -28,7 +29,7 @@ class LoginControleur{
     }
 
     public function liste(){
-        $info = Bdd::selectInfos('admin', 'login', $_SESSION['id']);
+        $info = Bdd::select('admin', 'login', $_SESSION['id'], true);
         //var_dump($info);
 
         include "vues/header.html.php";
@@ -60,7 +61,7 @@ class LoginControleur{
                 $login->setPassword($_POST['password']);
                 //var_dump($login->getPassword());
                 $resultat = Bdd::loginDataVerify('admin', $login);
-                //var_dump($resultat);
+                var_dump($resultat);
 
                 if(gettype($resultat) == 'array'){
                     // Le mot de passe est correct, alors ouvrir une nouvelle session

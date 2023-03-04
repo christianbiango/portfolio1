@@ -26,7 +26,9 @@ class FrontControleur{
             //var_dump($f->getImg());
             $f->setTitre($_POST['titre']);
             $f->setText($_POST['txt']);
-            $resultat = Bdd::insertProjet($f);
+
+            // Le projet, la table, les colonnes et leurs valeurs qu'on souhaite ajouter en base de données
+            $resultat = Bdd::insertProjet($f, "projet", "name, img, titre, text", ":name, :img, :titre, :text");
             var_dump($resultat);
         
             if($resultat){
@@ -55,7 +57,7 @@ class FrontControleur{
 
                 if($f) {
                     if($_SERVER["REQUEST_METHOD"] == "POST"){
-                        if( Bdd::deleteLivre($f, 'projet') == 1) {
+                        if( Bdd::deleteItem($f, 'projet') == 1) {
                             redirection("index_back.php");
                         }
                     }
@@ -102,7 +104,8 @@ class FrontControleur{
                 //var_dump($p->getDate());
                 $p->setOldFile($projet->getName());
                 //var_dump($p->getOldFile());
-                if( Bdd::updateProjet($p) ){
+                // Le projet, la table, les colonnes et les valeurs que l'on souhaite modifier en base de données
+                if( Bdd::updateProjet($p, "projet", "name = :name, img = :img, titre = :titre, text = :text") ){
                     if(!$p->getName() != $p->getOldFile()){
                         redirection("vues/front/front.interface.html.php");
                     } else if(unlink('./uploads/' . $p->getOldFile())){

@@ -54,7 +54,7 @@ class MsgControleur{
             if($_SERVER["REQUEST_METHOD"] == "POST"){
 
                 ($msg->getTraitement() == 0 ? $msg->setTraitement(1) : $msg->setTraitement(0));
-                if(Bdd::updateMsg($msg, 'contact') == 1){
+                if(Bdd::updateTraitementMsg($msg, 'contact') == 1){
 
                     if(Bdd::updateLastActivity('contact', 'traitement_date',  $id)){
 
@@ -77,7 +77,7 @@ class MsgControleur{
 
                 if($msg) {
                     if($_SERVER["REQUEST_METHOD"] == "POST"){
-                        if( Bdd::deleteLivre($msg, 'contact') == 1) {
+                        if( Bdd::deleteItem($msg, 'contact') == 1) {
                             redirection("index_back.php");
                         }
                     }
@@ -92,7 +92,7 @@ class MsgControleur{
     public function supprimertous()
     {
                     if($_SERVER["REQUEST_METHOD"] == "POST"){
-                        if( Bdd::deleteAll('contact') == 1) {
+                        if( Bdd::deleteItem('', 'contact', true) == 1) {
                             redirection("index_back.php");
                         } else {
                             redirection("index_back.php");
