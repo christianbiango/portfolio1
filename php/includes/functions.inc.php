@@ -1,5 +1,5 @@
 <?php
-
+if($_SERVER['PHP_SELF'] == '/portfolio/php/includes/functions.inc.php') header('Location: ../vues/login/logout.html.php');
 function debug($variable) {
     echo "<pre>";
     var_dump($variable);

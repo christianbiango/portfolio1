@@ -1,6 +1,6 @@
 <?php
 use const Modeles\UN;
-
+if($_SERVER['PHP_SELF'] == '/portfolio/php/vues/pagination.html.php') header('Location: login/logout.html.php');
 ?>
 <section>
 

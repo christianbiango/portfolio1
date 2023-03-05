@@ -1,4 +1,6 @@
-
+<?php
+isLogged();
+?>
 
 <table class="table table-bordered">
     <thead class="thead-dark">

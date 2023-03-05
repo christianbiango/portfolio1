@@ -1,7 +1,5 @@
 <?php
-//include "../../includes/functions.inc.php";
-
-//isLogged('../login/login.html.php');
+isLogged();
 
 use const Modeles\IS_NULL;
 

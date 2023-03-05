@@ -1,5 +1,4 @@
-
-
+<?php isLogged(); ?>
 <h1>Voulez-vous supprimer tous les messages traités ?</h1>
 
 <form method="post">

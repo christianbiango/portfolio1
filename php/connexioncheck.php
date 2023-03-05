@@ -1,9 +1,9 @@
 <?php
 
-function isLogged($url){
+function isLogged(){
     if(!isset($_SESSION)) session_start();
     if(!$_SESSION['loggedin']){
-        header('Location: ' . $url);
+        header('Location: /portfolio/php/vues/login/login.html.php');
         exit;
     } else if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true){
         // Duration de la session en secondes
@@ -17,7 +17,7 @@ function isLogged($url){
             $_SESSION = array();
             // destruction
             session_destroy();
-            header('Location: ../login/login.html.php');
+            header('Location: /portfolio/php/vues/login/login.html.php');
             exit;
         }
         $_SESSION['LAST_ACTIVITY'] = $time;

@@ -1,7 +1,7 @@
 <?php
 include "includes/init.inc.php";
 include 'connexioncheck.php';
-isLogged('vues/login/login.html.php');
+isLogged();
 
 $methode = $_GET["methode"] ?? "liste";
 $controleur = $_GET["controleur"] ?? "home";

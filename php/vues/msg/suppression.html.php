@@ -1,4 +1,4 @@
-
+<?php isLogged(); ?>
 
 <h1>Confirmation <?= ($_GET['methode'] === 'modifier' ? 'du traitement ' : 'de la suppression '); ?> du message n°<?= $msg->getId() ?> ?</h1>
 

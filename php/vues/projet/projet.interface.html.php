@@ -1,5 +1,5 @@
 <?php
-
+isLogged();
 use const Modeles\IS_NULL;
 ?>
 

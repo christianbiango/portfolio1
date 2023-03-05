@@ -1,5 +1,6 @@
 <?php
 namespace Modeles\Entites;
+if($_SERVER['PHP_SELF'] == '/portfolio/php/Modeles/Entites/Images.php') header('Location: ../../vues/login/logout.html.php');
 
 class Images{
     private $id;

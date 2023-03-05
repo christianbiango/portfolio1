@@ -1,5 +1,5 @@
 
-
+<?php isLogged() ?>
 <?php if(isset($formCheck)) : ?>
         <div class="alert alert-danger"><?= $formCheck ?></div>
 <?php endif ?>

@@ -1,6 +1,7 @@
 <?php
 
 namespace Controleurs;
+if($_SERVER['PHP_SELF'] == '/portfolio/php/Controleurs/ProjetControleur.php') header('Location: ../vues/login/logout.html.php');
 
 use Modeles\Bdd;
 use Modeles\Entites\Projet;

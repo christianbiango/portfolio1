@@ -1,6 +1,8 @@
 <?php
 
 namespace Modeles\Entites;
+if($_SERVER['PHP_SELF'] == '/portfolio/php/Modeles/Entites/Login.php') header('Location: ../../vues/login/logout.html.php');
+
 
 
 class Login{

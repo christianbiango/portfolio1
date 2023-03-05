@@ -1,4 +1,4 @@
-
+<?php isLogged(); ?>
 
 <h1>Tu es connecté, <?= $_SESSION['username'] . '😁';?></h1>
 
