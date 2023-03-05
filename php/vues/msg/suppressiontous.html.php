@@ -1,8 +1,5 @@
-<?php
 
-if(!isset($_SESSION)) session_start();
-if(!$_SESSION['loggedin']) header('Location: ../login/login.html.php');
-?>
+
 <h1>Voulez-vous supprimer tous les messages traités ?</h1>
 
 <form method="post">

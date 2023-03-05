@@ -1,19 +1,25 @@
 <?php
-
 namespace Modeles;
+
 use PDO;
 use Modeles\Entites\Msg;
 use Modeles\Entites\Login;
-use Modeles\Entites\Front;
+use Modeles\Entites\Projet;
 use Modeles\Entites\Images;
 use Modeles\Entites\Textes;
 use Modeles\Entites\Pagination;
 
 // Toutes les constantes importantes qui seront réutilisées dans ce fichier ou les controleurs.
 const UN = 1;
+const ZERO = 0;
 const IS_TRUE = true;
 const IS_FALSE = false;
-
+const IS_NULL = null;
+const QUATRE = 4;
+const CINQUANTE = 50;
+const CINQMILLE = 5000;
+const CINQ = 5;
+const TEMPS_CONNEXION = 300; // 5mn
 // Bdd class opère toutes les requêtes en base de données. Abstraite, elle ne peut pas être instanciée
 abstract class Bdd {
 
@@ -25,22 +31,20 @@ abstract class Bdd {
     //  Les deux méthodes de sélection 
 
     /**
-     * select function : Sélectionne des informations d'une table
+     * select function : Sélectionne des informations d'un compte utilisateur
      *
      * @param string $table : la table selectionnée
      * @param string $class : la classe dont on souhaite retourner une objet
-     * @param boolean $id : l'id de l'utilisateur, dans le cas où l'on souhaite afficher les informations du compte
-     * @param boolean $onlyConnectionInfos : si l'on souhaite afficher les informations de l'utilisateur ou non
+     * @param boolean $id : l'id de l'utilisateur dont on veut afficher les informations
      * @return void : le nouvel objet
      */
-    public static function select(string $table, string $class, $id = IS_FALSE, bool $onlyConnectionInfos = IS_FALSE){
+    public static function selectInfosUtilisateur(string $table, string $class, int $id){
         
-        // Conditions ternaires : dans le cas où on veut afficher une liste de toute la table ce sont les condition 1 qui sera interprétée, dans le cas où l'on veut uniquement les informations du compte, ce sont les conditions 2.
-        $informations = ($onlyConnectionInfos == IS_FALSE ? "*" : "created_at, nom, prenom, fonction, last_activity");
-        $forUserInformations = ($onlyConnectionInfos == IS_FALSE ? "" : " WHERE id = $id");
+        $informations = "created_at, nom, prenom, fonction, last_activity";
+        $condition = "WHERE id = $id";
 
         // requête PDO
-        $stmt = self::pdo()->query("SELECT $informations FROM $table ORDER BY date desc $forUserInformations");
+        $stmt = self::pdo()->query("SELECT $informations FROM $table $condition");
         return $stmt->fetchAll(PDO::FETCH_CLASS, "Modeles\Entites\\" . ucfirst($class) );       
     }
 
@@ -67,11 +71,12 @@ abstract class Bdd {
      *
      * @param string $nb_items -> passer de préference "nb_items" en param
      * @param string $table -> La table à selectionner
-     * @param string $traitementOption -> Pour trier si l'on veut que seul les messages non traités s'affichent ou non
+     * @param string $traitementOption ->  Option de tri : si l'on veut que seul les messages non traités s'affichent ou non
      */
     public static function calcTotalPages(string $nb_items, string $table, string $traitementOption = ''){
         // requête PDO
-        $stmt = self::pdo()->query("SELECT COUNT(*) AS $nb_items FROM $table " . self::traitementTernaire($traitementOption)); // Voir la méthode traitementTernaire
+        $stmt = self::pdo()->query("SELECT COUNT(*) AS $nb_items FROM $table " . self::traitementTernaire($traitementOption)); // Voir la méthode traitementTernaire de cette classe
+ 
         return $stmt->fetch();  
     }
 
@@ -80,7 +85,7 @@ abstract class Bdd {
      *
      * @param string $table : La table selectionnée
      * @param Pagination $pagination : L'objet contenant les informations sur la pagination en question
-     * @param string $dateOption
+     * @param string $dateOption : Option de date : pour dater du plus récent d'abord ou du plus ancien d'abord
      * @param string $traitementOption
      * @return void : une array associative de tous les éléments de la page donnée
      */
@@ -101,6 +106,7 @@ abstract class Bdd {
         return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 
+    // Pour vérifier si seuls les messages non traités doivent être affichés
     public static function traitementTernaire($traitementOption){
         $traitementTernaire = ($traitementOption == "on" ? 'WHERE traitement = 0 ' : '');
         return $traitementTernaire;
@@ -143,7 +149,7 @@ abstract class Bdd {
 
                         // Vérification du mot de passe.
                         if(password_verify($l->getPassword(), $rowHashedPassword)){
-                            return [$rowId, $rowUsername];
+                            return ["rowId" => $rowId, "rowUsername" => $rowUsername];
                         } else {
                             // Le mot de passe est invalide
                             return $l->setLoginErr('Nom d\'utilisateur ou mot de passe invalide');
@@ -166,7 +172,7 @@ abstract class Bdd {
     /**
      * insertProjet function : Ajoute un projet en base de données
      *
-     * @param Front $projet : contient le nom de l'image, le titre et le texte du projet que l'utilisateur souhaite insérer
+     * @param Object $projet : contient le nom de l'image, le titre et le texte du projet que l'utilisateur souhaite insérer
      * @return void : booléen
      */
     /**
@@ -235,7 +241,7 @@ abstract class Bdd {
         return self::pdo()->exec("UPDATE $table SET $colonne = now() WHERE id = $id");
     }
 
-    // Toggle le status traité ou non traité des messages
+    // Toggle le status en traité ou non traité des messages
     public static function updateTraitementMsg(Msg $m, $table){
         $texteRequete = "UPDATE $table SET traitement = :traitement WHERE id = :id";
         $stmt = self::pdo()->prepare($texteRequete);
@@ -245,6 +251,8 @@ abstract class Bdd {
     }
 
     // La méthode de suppression
+
+    // Efface un élément du back-office ou tous les messages traités
     public static function deleteItem($item, string $table, $deleteAllCheckedMessages = IS_FALSE)
     {
         return self::pdo()->exec("DELETE FROM $table WHERE " . ($deleteAllCheckedMessages == IS_FALSE ? 'id = ' . $item->getId() : 'traitement = 1') );
@@ -267,7 +275,7 @@ abstract class Bdd {
         } else if($table == 'textes'){
             $stmt->bindValue(":text", $projet->getText());
             // Cette structure conditionnelle permet de sélectionner une ligne précisément lorsque l'on cherche à modifier un texte
-            if($id != false) $stmt->bindValue(":id", $projet->getId());
+            if($id != IS_FALSE) $stmt->bindValue(":id", $projet->getId());
             return $stmt->execute();
         } 
     }
@@ -278,6 +286,7 @@ abstract class Bdd {
      * @param [type] $stmt : le pdostatement préparé par la méthode ayant appelé tableChoiceStatement et fileManagement
      * @param Object $projet : le projet déjà passé en paramètre dans tableChoiceStatement
      * @param string $table : La table déjà passée en paramètre dans tableChoiceStatement
+     * @param boolean $id : dans le cas où l'on souhaite modifier une image un projet ou un texte, l'id sera celui de la ligne concernée
      * @return void : un booléen
      */
     public static function fileManagement($stmt, Object $projet, string $table, $id = IS_FALSE){
@@ -307,14 +316,14 @@ abstract class Bdd {
                             $stmt->bindValue(":text", $projet->getText());
                         }
                         // Cette structure conditionnelle permet de sélectionner une ligne précisément lorsque l'on cherche à modifier une image simple ou celle d'un projet
-                        if($id != false){
+                        if($id != IS_FALSE){
                             $stmt->bindValue(":id", $projet->getId());
                         }
                         
                     return $stmt->execute();
                     }
                 }
-                return "Il y a eu une erreur";
+                return IS_FALSE;
     }
 
     // Félicitations pour être arrivé jusque-là...

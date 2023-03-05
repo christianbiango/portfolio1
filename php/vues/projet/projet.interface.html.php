@@ -1,8 +1,6 @@
 <?php
-if(!$_SESSION['loggedin']) {
-    header('Location: ../login/login.html.php');
-exit;
-}
+
+use const Modeles\IS_NULL;
 ?>
 
 <table class="table table-bordered">
@@ -19,32 +17,32 @@ exit;
     </thead>
 
     <tbody>
-        <?php foreach($front as $p): ?>
+        <?php foreach($finalResult as $r): ?>
         <tr>
             <td>
-                <?= $p->getId() ?>
+                <?= $r['id']; ?>
             </td>
             <td>
-                <?= '<img src="' . $p->getImg() . '" title="' . $p->getName() . '" width="100" height="100" />'; ?>
+                <?= '<img src="' . $r['img'] . '" title="' . $r['name'] . '" width="100" height="100" />'; ?>
             </td>
             <td>
-                <?= $p->getTitre() ?>
+                <?= $r['titre'] ?>
             </td>
             <td>
-                <?= $p->getText() ?>
+                <?= $r['text'] ?>
             </td>
             <td>
-                <?= date("d/m/Y à H:i:s", strtotime($p->getDate())); ?>
+                <?= date("d/m/Y à H:i:s", strtotime($r['date'])); ?>
             </td>
             <td>
-                <?= ($p->getDateModification() == null ? 'Jamais modifié' : date("d/m/Y à H:i:s", strtotime($p->getDateModification()))); ?>
+                <?= ($r['date_modification'] == IS_NULL ? 'Jamais modifié' : date("d/m/Y à H:i:s", strtotime($r['date_modification']))); ?>
             </td>
 
             <td>
-                <a href="<?= lien("front", "modifier", $p->getId()) ?>">
+                <a href="<?= lien("projet", "modifier", $r['id']) ?>">
                     <i class="fa fa-edit"></i>
                 </a>
-                <a href="<?= lien("front", "supprimer", $p->getid()) ?>">
+                <a href="<?= lien("projet", "supprimer", $r['id']) ?>">
                     <i class="fa fa-trash"></i>
                 </a>
             </td>

@@ -2,10 +2,14 @@
 
 namespace Controleurs;
 
+
 use Modeles\Bdd;
 use Modeles\Entites\Msg;
 use Modeles\Entites\Pagination;
 use Controleurs\PaginationControleur;
+use const Modeles\UN;
+use const Modeles\ZERO;
+use const Modeles\IS_TRUE;
 require_once './Modeles/Bdd.php';
 require_once './includes/functions.inc.php';
 require_once './Modeles/Entites/Pagination.php';
@@ -13,22 +17,19 @@ require_once 'PaginationControleur.php';
 
 
 class MsgControleur{
+    // Affiche la liste des messages, gérée par le controleur de pagination
     public function liste()
     {
-        
-        $msg = '';
-
-        $p = PaginationControleur::checkPage($msg);
-        //var_dump($pagination);      
+        PaginationControleur::createPage('contact');    
     }
 
     public function ajouter(){
         if($_POST){
             //debug($_POST);
             $m = new Msg;
-            $m->setNom($_POST['nom']);
-            $m->setEmail($_POST['email']);
-            $m->setMsg($_POST['msg']);
+            $m->setNom(htmlspecialchars($_POST['nom']));
+            $m->setEmail(htmlspecialchars($_POST['email']));
+            $m->setMsg(htmlspecialchars($_POST['msg']));
             $resultat = Bdd::insertMsg($m);
         
             if(!$resultat){
@@ -36,38 +37,31 @@ class MsgControleur{
             }
         }   
         
-        // AFFICHAGE
-
-        $msg = new Msg;
-/*
-        include "../header.html.php";
-        include "../msg/form.html.php";
-        include "../footer.html.php";
-        */
-        
     }
 
+    // Toggle le status d'un message en traité ou non traité
     public function modifier($id){
         $msg = Bdd::selectById("contact", "msg", $id);
-        //var_dump($msg->getTraitement());
+
         if(isset($msg)){
             if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-                ($msg->getTraitement() == 0 ? $msg->setTraitement(1) : $msg->setTraitement(0));
-                if(Bdd::updateTraitementMsg($msg, 'contact') == 1){
+                ($msg->getTraitement() == ZERO ? $msg->setTraitement(UN) : $msg->setTraitement(ZERO));
+                if(Bdd::updateTraitementMsg($msg, 'contact') == UN){
 
                     if(Bdd::updateLastActivity('contact', 'traitement_date',  $id)){
 
-                        redirection('index_back.php');
+                        redirection('index.back.php');
                     }
                 } else echo 'erreur';
             }
         } else{
-            redirection('index_back.php');
+            redirection('index.back.php');
         }
         affichage('msg/modification.html.php', [ "msg" => $msg]);
     }
 
+    // Supprime un message en fonction de son id
     public function supprimer($id)
     {
 
@@ -77,34 +71,30 @@ class MsgControleur{
 
                 if($msg) {
                     if($_SERVER["REQUEST_METHOD"] == "POST"){
-                        if( Bdd::deleteItem($msg, 'contact') == 1) {
-                            redirection("index_back.php");
+                        if( Bdd::deleteItem($msg, 'contact') == UN) {
+                            redirection("index.back.php");
                         }
                     }
                 } else {
-                    redirection("index_back.php");
+                    redirection("index.back.php");
                 }
             }
         }
         affichage("msg/suppression.html.php", [ "msg" => $msg ]);
     }
 
+
+    // Supprime tous les messages traités
     public function supprimertous()
     {
                     if($_SERVER["REQUEST_METHOD"] == "POST"){
-                        if( Bdd::deleteItem('', 'contact', true) == 1) {
-                            redirection("index_back.php");
+                        if( Bdd::deleteItem('', 'contact', IS_TRUE) == UN) {
+                            redirection("index.back.php");
                         } else {
-                            redirection("index_back.php");
+                            redirection("index.back.php");
                         }
                     }
         affichage("msg/suppressiontous.html.php");
-    }
-
-    public function trier(){
-        if($_SERVER["REQUEST_METHOD"] == "POST"){
-            var_dump($_POST);
-        }
     }
 
 }

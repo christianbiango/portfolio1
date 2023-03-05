@@ -1,10 +1,5 @@
-<?php
-//include "../../includes/functions.inc.php";
 
-//isLogged('../login/login.html.php');
-if(!isset($_SESSION)) session_start();
-if(!$_SESSION['loggedin']) header('Location: ../login/login.html.php');
-?>
+
 <h1>Confirmation <?= ($_GET['methode'] === 'modifier' ? 'du traitement ' : 'de la suppression '); ?> du message n°<?= $msg->getId() ?> ?</h1>
 
 <ul class="list-group">

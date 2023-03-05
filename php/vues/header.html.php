@@ -1,3 +1,8 @@
+<?php
+if($_SERVER['PHP_SELF'] == '/portfolio/php/vues/header.html.php') header('Location: login/logout.html.php');
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -22,7 +27,7 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
-            <a class="navbar-brand" href="index_back.php">Accueil</a>
+            <a class="navbar-brand" href="index.back.php">Accueil</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -45,9 +50,9 @@
                             Interface
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="<?= lien("front", "liste") ?>">Projets</a>
-                            <a class="dropdown-item" href="<?= lien("images", "liste") ?>">Images</a>
-                            <a class="dropdown-item" href="<?= lien("textes", "liste") ?>">Textes</a>
+                            <a class="dropdown-item" href="<?= lien("projet", "liste") ?>">Projets</a>
+                            <a class="dropdown-item" href="<?= lien("projet", "liste", null, "images") ?>">Images</a>
+                            <a class="dropdown-item" href="<?= lien("projet", "liste", null, "textes") ?>">Textes</a>
                         </div>
                     </li>
 
@@ -57,9 +62,9 @@
                             Ajouter
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="<?= lien("front", "ajouter") ?>">Ajouter un projet</a>
-                        <a class="dropdown-item" href="<?= lien("images", "ajouter") ?>">Ajouter une image</a>
-                        <a class="dropdown-item" href="<?= lien("textes", "ajouter") ?>">Ajouter un texte</a>
+                        <a class="dropdown-item" href="<?= lien("projet", "ajouter") ?>">Ajouter un projet</a>
+                        <a class="dropdown-item" href="<?= lien("projet", "ajouter", null, "images") ?>">Ajouter une image</a>
+                        <a class="dropdown-item" href="<?= lien("projet", "ajouter", null, "textes") ?>">Ajouter un texte</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

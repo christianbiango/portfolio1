@@ -4,12 +4,13 @@ use Controleurs\LoginControleur;
 use Modeles\Entites\Login;
 require_once '../../Controleurs/LoginControleur.php';
 require_once '../../Modeles/Entites/Login.php';
-$a = new LoginControleur;
+// Initier la tentative de connexion
+$loginControleur = new LoginControleur;
 $login = new Login;
-$a->checkCurrentSession($login);
-
+$loginControleur->checkCurrentSession($login);
 
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

@@ -1,9 +1,4 @@
-<?php
-if(!$_SESSION['loggedin']) {
-    header('Location: ../login/login.html.php');
-exit;
-}
-?>
+
 
 <table class="table table-bordered">
     <thead class="thead-dark">
@@ -17,26 +12,26 @@ exit;
     </thead>
 
     <tbody>
-        <?php foreach($t as $p): ?>
+        <?php foreach($finalResult as $r): ?>
         <tr>
             <td>
-                <?= $p->getId() ?>
+                <?= $r['id'] ?>
             </td>
             <td>
-                <?= $p->getText() ?>
+                <?= $r['text'] ?>
             </td>
             <td>
-                <?= date("d/m/Y à H:i:s", strtotime($p->getDate())); ?>
+                <?= date("d/m/Y à H:i:s", strtotime($r['date'])); ?>
             </td>
             <td>
-                <?= (empty($p->getDateModification()) ? 'Jamais modifié' : date("d/m/Y à H:i:s", strtotime($p->getDateModification()))); ?>
+                <?= (empty($r['date_modification']) ? 'Jamais modifié' : date("d/m/Y à H:i:s", strtotime($r['date_modification']))); ?>
             </td>
 
             <td>
-                <a href="<?= lien("textes", "modifier", $p->getId()) ?>">
+                <a href="<?= lien("projet", "modifier", $r['id'], "textes"); ?>">
                     <i class="fa fa-edit"></i>
                 </a>
-                <a href="<?= lien("textes", "supprimer", $p->getid()) ?>">
+                <a href="<?= lien("projet", "supprimer", $r['id'], "textes"); ?>">
                     <i class="fa fa-trash"></i>
                 </a>
             </td>

@@ -2,6 +2,7 @@
 
 namespace Modeles\Entites;
 
+
 class Login{
     private $id;
     private $username;

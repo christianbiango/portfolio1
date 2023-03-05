@@ -1,15 +1,12 @@
 <?php
 include "includes/init.inc.php";
-
-isLogged('./vues/login/login.html.php');
-if(!$_SESSION['loggedin']) {
-    header('Location: ../login/login.html.php');
-exit;
-}
+include 'connexioncheck.php';
+isLogged('vues/login/login.html.php');
 
 $methode = $_GET["methode"] ?? "liste";
 $controleur = $_GET["controleur"] ?? "home";
 $id = $_GET["id"] ?? null;
+$outil = $_GET["outil"] ?? "projet";
 
 $nomClasse = "Controleurs\\" . ucfirst($controleur) . "Controleur";
 

@@ -1,12 +1,5 @@
-<?php
-//include "./includes/functions.inc.php";
 
-//isLogged('../login/login.html.php');
-if(!$_SESSION['loggedin']) {
-    header('Location: ../login/login.html.php');
-exit;
-}
-?>
+
 <h1>Tu es connecté, <?= $_SESSION['username'] . '😁';?></h1>
 
 <h6 class="mt-5">Te voilà dans le Back-Office ! Ici, c'est la partie administrateur du site, invisible par les clients, accessible par les administrateurs via une url spécifique et des identifiants.</h6>

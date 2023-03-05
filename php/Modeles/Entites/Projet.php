@@ -1,7 +1,8 @@
 <?php
 namespace Modeles\Entites;
 
-class Front{
+
+class Projet{
     private $id;
     private $name;
     private $img;

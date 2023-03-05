@@ -1,15 +1,5 @@
 <?php
 
-function isLogged($url){
-    if(!isset($_SESSION)) session_start();
-    if(!$_SESSION['loggedin']){
-        
-        redirection($url);
-        exit;
-    }
-    
-}
-
 function debug($variable) {
     echo "<pre>";
     var_dump($variable);
@@ -30,7 +20,7 @@ function affichage($fichier, $variablesVue = []) {
     include "vues/footer.html.php";    
 }
 
-function lien($controleur, $methode = "liste", $id = null ) {
-    return "?controleur=$controleur&methode=$methode" . ($id ? "&id=$id" : "");
+function lien($controleur, $methode = "liste", $id = null, $outil = "projet" ) {
+    return "?controleur=$controleur&methode=$methode" . ($id ? "&id=$id" : "") . "&outil=$outil";
 }
 ?>
